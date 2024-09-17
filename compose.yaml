@@ -10,14 +10,20 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      postgis:
-        condition: service_healthy
-  postgis:
-    image: postgis/postgis
-    env_file:
-      - .env
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      - redis
+      # postgis:
+      #   condition: service_healthy
+  redis:
+    image: redis/redis-stack-server
+    ports:
+      - 6379:6379
+
+  # postgis:
+  #   image: postgis/postgis
+  #   env_file:
+  #     - ./backend/.env
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5

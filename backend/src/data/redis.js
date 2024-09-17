@@ -1,6 +1,9 @@
 import { createClient } from 'redis';
+import 'dotenv/config';
 
-const client = createClient();
+const client = createClient({
+    url: process.env.REDIS_URI
+});
 
 
 async function main() {
