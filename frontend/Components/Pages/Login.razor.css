@@ -1,0 +1,39 @@
+#container{
+    display: block;
+    height: 100vh;
+    width: 100vw;
+    padding-left: 10px;
+    padding-right: 10px;
+    background: rgb(0,42,43);
+    background: linear-gradient(90deg, rgba(0,42,43,1) 0%, rgba(55,52,31,1) 50%, rgba(0,42,43,1) 100%);
+}
+
+#properties{
+    display: flex;
+    flex-direction: column;
+    height: calc(200px + 25vh);
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.property{
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+}
+
+#submit-btn{
+    width: 10%;
+    height: 14%;
+    background-color: burlywood;
+    border: 0;
+}
+
+label{
+    font-size: calc(16px + 0.2vw);
+    color: gray;
+}
+
+h1{
+    color: white;
+}

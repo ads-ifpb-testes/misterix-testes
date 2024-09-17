@@ -1,0 +1,22 @@
+nav{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.nav-item {
+    font-size: 1rem;
+}
+    .nav-item ::deep .nav-link {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        color: white
+    }
+
+.nav-item ::deep a.active {
+    text-decoration: underline;
+}
+
+.nav-item ::deep .nav-link:hover {
+    text-decoration: underline;
+}

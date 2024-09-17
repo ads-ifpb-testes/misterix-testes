@@ -1,0 +1,80 @@
+@using frontend.Models
+@using System.Text.Json
+@inherits ComponentBase
+@inject IJSRuntime _jS
+
+<div id="map" style="height: 70vh; width: 50vw; border: 1px solid gray;" @onclick="SetMarkerPosition"></div>
+
+@code {
+    private List<Legend>? _legends;
+    public Geometry? MyMarkerPosition;
+    private readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await _jS.InvokeVoidAsync("setUpMap");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _legends = await _jS.InvokeAsync<List<Legend>>("getLegends");
+            await SetLegendsOnMap();
+        }
+        catch
+        {
+            return;
+        }
+    }
+
+    private async Task SetMarkerPosition()
+    {
+        try
+        {
+            var marker = await _jS.InvokeAsync<IJSObjectReference>("getMarker");
+            var json = await marker.InvokeAsync<JsonDocument>("toGeoJSON");
+            MyMarkerPosition = json.RootElement.GetProperty("geometry").Deserialize<Geometry>(_options);
+            if (MyMarkerPosition != null)
+            {
+                var aux = MyMarkerPosition.Coordinates[0];
+                MyMarkerPosition.Coordinates[0] = MyMarkerPosition.Coordinates[1];
+                MyMarkerPosition.Coordinates[1] = aux;
+            }
+        }
+        catch
+        {
+            return;
+        }
+    }
+
+    private async Task SetLegendsOnMap()
+    {
+        if (_legends == null)
+            return;
+
+        foreach (var legend in _legends)
+        {
+            await _jS.InvokeVoidAsync("setMarker", legend.Location!.Coordinates, legend.Title);
+        }
+    }
+
+    public async Task SetLocation(float[] coordinates)
+    {
+        await _jS.InvokeVoidAsync("setLocation", coordinates);
+    }
+
+    public async Task SetCurrentLocation()
+    {
+        await _jS.InvokeVoidAsync("setCurrentLocation");
+    }
+
+    public async Task InvalidateSize()
+    {
+        await _jS.InvokeVoidAsync("invalidateSize");
+    }
+}
