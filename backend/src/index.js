@@ -3,6 +3,7 @@ import legendRouter from './controller/legendController.js';
 import userRouter from './controller/userController.js';
 import { authenticateToken } from './middlewares.js';
 import cors from 'cors';
+import 'dotenv/config';
 
 var whitelist = ['http://frontend:8080', 'http://localhost:5076']
 var corsOptions = {

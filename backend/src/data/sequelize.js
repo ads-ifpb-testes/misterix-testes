@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import {defineModels, syncModels} from "./models.js";
+import 'dotenv/config';
 
 const sequelize = new Sequelize(
     process.env.POSTGRES_DB,
