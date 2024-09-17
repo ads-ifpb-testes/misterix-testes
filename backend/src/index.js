@@ -1,9 +1,9 @@
 import express, { json } from 'express';
-import legendRouter from './controller/legendController.js';
-import userRouter from './controller/userController.js';
-import { authenticateToken } from './middlewares.js';
+import legendRouter from './router/legendRouter.js';
+import userRouter from './router/userRouter.js';
 import cors from 'cors';
 import 'dotenv/config';
+import { authenticate } from './middlewares.js';
 
 var whitelist = ['http://frontend:8080', 'http://localhost:5076']
 var corsOptions = {
@@ -22,6 +22,6 @@ app.use(cors());
 app.use('/legends', legendRouter);
 app.use('/users', userRouter)
 
-app.get('/auth', authenticateToken, (req, res) => res.sendStatus(200));
+app.get('/auth', authenticate, (req, res) => res.sendStatus(200));
 
 app.listen(port, () => console.log('listen on http://localhost:' + port));

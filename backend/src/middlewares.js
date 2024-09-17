@@ -16,7 +16,7 @@ export async function checkLegendOwner(req, res, next){
     }
 };
 
-export function authenticateToken(req, res, next){
+export function authenticate(req, res, next){
     const token = req.header('Authorization');
     if(!token)
         res.sendStatus(403);

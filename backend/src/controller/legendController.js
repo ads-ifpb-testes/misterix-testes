@@ -1,18 +1,22 @@
-import { Router } from "express";
 import Legend from '../model/mongooseLegend.js'
-import { authenticateToken, checkLegendModel, checkLegendOwner } from "../middlewares.js";
+import redisClient from '../data/redis.js'
 
-const legendRouter = new Router();
-
-legendRouter.get('/', async (req, res) => {
+export async function getLegends(req, res){
     try{
+        const cache = await redisClient.get('LEGENDS');
+        if(cache){
+            res.status(200).json(JSON.parse(cache));
+            return;
+        }
+
         const legends = await Legend.find({});
+        await redisClient.set('LEGENDS', JSON.stringify(legends), {EX: 3600});
         res.status(200).json(legends);    
     }catch(err){
         console.log(err);
         res.sendStatus(500);
     }
-});
+}
 
 // legendRouter.get('/:id', async (req, res) => {
 //     const {id} = req.params;
@@ -25,7 +29,7 @@ legendRouter.get('/', async (req, res) => {
 //     }
 // })
 
-legendRouter.get('/mylegends', authenticateToken, async (req, res) => {
+export async function getMyLegends(req, res){
     const {login} = res.locals;
     try{
         const legends = await Legend.find({postedBy: login})
@@ -35,9 +39,9 @@ legendRouter.get('/mylegends', authenticateToken, async (req, res) => {
         console.log(err);
         res.sendStatus(500);
     }
-})
+}
 
-legendRouter.post('/', authenticateToken, checkLegendModel, async (req, res) => {
+export async function postLegend(req, res){
     const {title, description, type, location} = res.locals.legend;
     const {login} = res.locals;
     try{
@@ -47,9 +51,9 @@ legendRouter.post('/', authenticateToken, checkLegendModel, async (req, res) => 
         console.log(err);
         res.sendStatus(500);
     }
-});
+}
 
-legendRouter.put('/:id', authenticateToken, checkLegendOwner, checkLegendModel, async (req, res) => {
+export async function updateLegend(req, res){
     const {id} = req.params;
     const legend = res.locals.legend;
     try{
@@ -59,9 +63,9 @@ legendRouter.put('/:id', authenticateToken, checkLegendOwner, checkLegendModel, 
         console.log(err);
         res.sendStatus(500);
     }
-})
+}
 
-legendRouter.delete('/:id', authenticateToken, checkLegendOwner, async (req, res) => {
+export async function deleteLegend(req, res){
     const {id} = req.params;
     try{
         await Legend.findByIdAndDelete(id);
@@ -70,6 +74,4 @@ legendRouter.delete('/:id', authenticateToken, checkLegendOwner, async (req, res
         console.log(err);
         res.sendStatus(500);
     }
-})
-
-export default legendRouter;
+}

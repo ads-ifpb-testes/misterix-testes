@@ -1,11 +1,7 @@
-import { Router } from "express";
 import User from "../model/mongooseUser.js";
 import { generateAccessToken } from "../service/jwtService.js";
-import { checkLoginModel } from "../middlewares.js";
 
-const userRouter = new Router();
-
-userRouter.post('/login', checkLoginModel, async (req, res) => {
+export async function logIn(req, res){
     const {login, password} = res.locals.user;
     try{
         const user = await User.findOne({login});
@@ -24,6 +20,4 @@ userRouter.post('/login', checkLoginModel, async (req, res) => {
         console.log(err);
         res.sendStatus(500);
     }
-})
-
-export default userRouter;
+}
