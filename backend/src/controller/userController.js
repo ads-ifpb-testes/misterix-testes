@@ -1,22 +1,22 @@
 import { Router } from "express";
-import sequelize from "../data/sequelize.js";
+import User from "../model/mongooseUser.js";
 import { generateAccessToken } from "../service/jwtService.js";
 import { checkLoginModel } from "../middlewares.js";
 
 const userRouter = new Router();
 
 userRouter.post('/login', checkLoginModel, async (req, res) => {
-    const {login, password} = req.body;
+    const {login, password} = res.locals.user;
     try{
-        const user = await sequelize.models.User.findByPk(login);
+        const user = await User.findOne({login});
         if(user){
             if(password == user.password)
                 res.status(200).json(generateAccessToken(login));
             else
-                res.sendStatus(401);
+                res.sendStatus(403);
         }
         else{
-            await sequelize.models.User.create({login, password});
+            await User.create({login, password});
             const token = generateAccessToken(login);
             res.status(201).json(token);
         }

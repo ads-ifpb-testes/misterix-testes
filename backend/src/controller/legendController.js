@@ -1,12 +1,12 @@
 import { Router } from "express";
-import sequelize from "../data/sequelize.js";
+import Legend from '../model/mongooseLegend.js'
 import { authenticateToken, checkLegendModel, checkLegendOwner } from "../middlewares.js";
 
 const legendRouter = new Router();
 
 legendRouter.get('/', async (req, res) => {
     try{
-        const legends = await sequelize.models.Legend.findAll();
+        const legends = await Legend.find({});
         res.status(200).json(legends);    
     }catch(err){
         console.log(err);
@@ -28,9 +28,7 @@ legendRouter.get('/', async (req, res) => {
 legendRouter.get('/mylegends', authenticateToken, async (req, res) => {
     const {login} = res.locals;
     try{
-        const legends = await sequelize.models.Legend.findAll({
-            where: {postedBy: login}
-        })
+        const legends = await Legend.find({postedBy: login})
         res.status(200).json(legends);
     }
     catch(err){
@@ -40,10 +38,10 @@ legendRouter.get('/mylegends', authenticateToken, async (req, res) => {
 })
 
 legendRouter.post('/', authenticateToken, checkLegendModel, async (req, res) => {
-    const {title, description, type, location} = req.body;
+    const {title, description, type, location} = res.locals.legend;
     const {login} = res.locals;
     try{
-        await sequelize.models.Legend.create({title, description, type, location, postedBy: login});
+        await Legend.create({title, description, type, location, postedBy: login});
         res.sendStatus(201);
     }catch(err){
         console.log(err);
@@ -53,12 +51,9 @@ legendRouter.post('/', authenticateToken, checkLegendModel, async (req, res) => 
 
 legendRouter.put('/:id', authenticateToken, checkLegendOwner, checkLegendModel, async (req, res) => {
     const {id} = req.params;
-    const {title, description, type, location} = req.body;
+    const legend = res.locals.legend;
     try{
-        await sequelize.models.Legend.update(
-            {title, description, type, location},
-            {where: {id}}
-        )
+        await Legend.findByIdAndUpdate(id, legend);
         res.sendStatus(200);
     }catch(err){
         console.log(err);
@@ -69,9 +64,7 @@ legendRouter.put('/:id', authenticateToken, checkLegendOwner, checkLegendModel, 
 legendRouter.delete('/:id', authenticateToken, checkLegendOwner, async (req, res) => {
     const {id} = req.params;
     try{
-        await sequelize.models.Legend.destroy({
-            where: {id}
-        })
+        await Legend.findByIdAndDelete(id);
         res.sendStatus(200);    
     }catch(err){
         console.log(err);

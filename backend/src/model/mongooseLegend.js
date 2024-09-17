@@ -1,5 +1,5 @@
 import { Schema } from "mongoose";
-import mongoose from "../data/mongoose";
+import mongoose from "../data/mongoose.js";
 
 const legendSchema = new Schema({
     title: {type: String, required: true},
@@ -9,7 +9,7 @@ const legendSchema = new Schema({
         type: {type: String, required: true, enum: ['Point']},
         coordinates: {type: [Number], required: true}
     },
-    postedBy: {type: Schema.Types.ObjectId, ref: 'User', required: true}
+    postedBy: {type: String, ref: 'User', required: true}
 });
 
 const fields = {title: 'text', type: 'text', description: 'text'};

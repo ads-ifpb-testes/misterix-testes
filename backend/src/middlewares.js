@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken';
-import sequelize from './data/sequelize.js'
+import Legend from './model/mongooseLegend.js';
 
 export async function checkLegendOwner(req, res, next){
     const {id} = req.params;
     const {login} = res.locals;
     try{
-        const legend = await sequelize.models.Legend.findByPk(id);
+        const legend = await Legend.findById(id);
         if(legend.postedBy != login)
             res.sendStatus(401);
 
@@ -19,7 +19,7 @@ export async function checkLegendOwner(req, res, next){
 export function authenticateToken(req, res, next){
     const token = req.header('Authorization');
     if(!token)
-        res.sendStatus(401);
+        res.sendStatus(403);
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
         if (err){
@@ -35,14 +35,19 @@ export function checkLoginModel(req, res, next){
     const {login, password} = req.body;
     if(!login || !password)
         res.sendStatus(400);
-    else
+    else{
+        res.locals.user = {login, password};
         next();
+    }
 }
 
 export function checkLegendModel(req, res, next){
     const {title, description, type, location} = req.body;
     if(!title || !description || !type || !location)
         res.sendStatus(400);
-    else
+    else{
+        res.locals.legend = {title, description, type, location};
         next();
+    }
+
 }

@@ -18,7 +18,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(json());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use('/legends', legendRouter);
 app.use('/users', userRouter)
 
