@@ -1,6 +1,6 @@
 var map, myMarker, myIcon;
 
-window.setUpMap = () => {
+window.setUpMap = (canSetMarker) => {
     myIcon = L.icon({
         iconUrl: './question-icon.svg',
         iconSize: [38, 95],
@@ -14,15 +14,17 @@ window.setUpMap = () => {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    map.on('click', (e) => {
-        if(!myMarker)
-            myMarker = L.marker(e.latlng, {icon: myIcon}).addTo(map);
-        else
-            myMarker.setLatLng(e.latlng);
-
-        map.setView(e.latlng);
-        myMarker.bindPopup("Sua localização.");
-    });
+    if(canSetMarker){
+        map.on('click', (e) => {
+            if(!myMarker)
+                myMarker = L.marker(e.latlng, {icon: myIcon}).addTo(map);
+            else
+                myMarker.setLatLng(e.latlng);
+    
+            map.setView(e.latlng);
+            myMarker.bindPopup("Sua localização.");
+        });
+    }
 }
 
 window.setCurrentLocation = () => {

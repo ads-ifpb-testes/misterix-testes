@@ -1,0 +1,53 @@
+@using System.Text.Json
+@using frontend.Models
+@inject IJSRuntime _jS
+@inject NavigationManager _navigator
+@rendermode InteractiveServer
+@page "/form"
+
+<div id="container">
+    <Map @ref="_map" />
+    <div id="form">
+        <div>
+            <label for="title">Título:</label>
+            <input id="title" type="text" @bind-value="_legend.Title" />
+        </div>
+        <div>
+            <label for="description">Descrição:</label>
+            <textarea name="description" id="description" @bind="_legend.Description"></textarea>
+        </div>
+        <div>
+            <label for="type">Tipo:</label>
+            <input id="type" type="text" @bind-value="_legend.Type">
+        </div>
+        <button @onclick="PostLegend">Enviar</button>
+    </div>
+</div>
+
+@code {
+    private Legend _legend = new();
+    private Map _map = null!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var isSuccess = await _jS.InvokeAsync<bool>("checkAuth");
+            if (!isSuccess)
+                _navigator.NavigateTo("login");
+
+            await _map.SetCurrentLocation();
+        }
+
+    }
+
+    private async Task PostLegend()
+    {
+        _legend.Location = _map.MyMarkerPosition;
+        var isSuccess = await _jS.InvokeAsync<bool>("postLegend", _legend);
+        if (isSuccess)
+        {
+            _navigator.Refresh(true);
+        }
+    }
+}

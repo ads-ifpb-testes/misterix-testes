@@ -3,9 +3,18 @@
 @inherits ComponentBase
 @inject IJSRuntime _jS
 
-<div id="map" style="height: 70vh; width: 50vw; border: 1px solid gray;" @onclick="SetMarkerPosition"></div>
+@if (CanSetMarkers)
+{
+    <div id="map" style="border: 1px solid gray;" @onclick="SetMarkerPosition"></div>
+}
+else
+{
+    <div id="map" style="border: 1px solid gray;"></div>
+}
 
 @code {
+    [Parameter]
+    public bool CanSetMarkers { get; set; } = true;
     private List<Legend>? _legends;
     public Geometry? MyMarkerPosition;
     private readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -15,7 +24,7 @@
     {
         if (firstRender)
         {
-            await _jS.InvokeVoidAsync("setUpMap");
+            await _jS.InvokeVoidAsync("setUpMap", CanSetMarkers);
         }
     }
 

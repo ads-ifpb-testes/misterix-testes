@@ -1,4 +1,3 @@
-@using System.Text.Json
 @using frontend.Models
 @inject IJSRuntime _jS
 @inject NavigationManager _navigator
@@ -6,27 +5,32 @@
 @page "/"
 
 <div id="container">
-    <Map @ref="_map" />
-    <div id="form">
-        <div>
-            <label for="title">Título:</label>
-            <input id="title" type="text" @bind-value="_legend.Title" />
+    <Map CanSetMarkers="false" @ref="_map" />
+    <div id="sidebar">
+        <div id="searchbar">
+            <input type="text" name="search-input" @bind-value="searchInput">
+            <button id="search-btn" onclick="Search">Pesquisar</button>
         </div>
-        <div>
-            <label for="description">Descrição:</label>
-            <textarea name="description" id="description" @bind="_legend.Description"></textarea>
+        <div id="legends">
+            <Virtualize Items="_legends" Context="legend">
+                <div class="legend-item">
+                    <Card Color="CardColor.Dark">
+                        <CardBody>
+                            <CardTitle>@legend.Title</CardTitle>
+                            <CardSubTitle>@legend.Type</CardSubTitle>
+                            <CardText>@legend.Description</CardText>
+                        </CardBody>
+                    </Card>
+                </div>
+            </Virtualize>
         </div>
-        <div>
-            <label for="type">Tipo:</label>
-            <input id="type" type="text" @bind-value="_legend.Type">
-        </div>
-        <button @onclick="PostLegend">Enviar</button>
     </div>
 </div>
 
 @code {
-    private Legend _legend = new();
     private Map _map = null!;
+    private List<Legend> _legends = [];
+    private string searchInput = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -41,13 +45,20 @@
 
     }
 
-    private async Task PostLegend()
+    protected override async Task OnInitializedAsync()
     {
-        _legend.Location = _map.MyMarkerPosition;
-        var isSuccess = await _jS.InvokeAsync<bool>("postLegend", _legend);
-        if (isSuccess)
+        try
         {
-            _navigator.Refresh(true);
+            _legends = await _jS.InvokeAsync<List<Legend>>("getLegends");
         }
+        catch
+        {
+            return;
+        }
+    }
+
+    private async Task Search()
+    {
+
     }
 }

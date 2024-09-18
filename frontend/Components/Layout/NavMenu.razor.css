@@ -6,17 +6,38 @@ nav{
 .nav-item {
     font-size: 1rem;
 }
-    .nav-item ::deep .nav-link {
-        display: flex;
-        align-items: center;
-        height: 100%;
-        color: white
-    }
+
+.nav-item ::deep .nav-link {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: white
+}
 
 .nav-item ::deep a.active {
     text-decoration: underline;
 }
 
 .nav-item ::deep .nav-link:hover {
+    text-decoration: underline;
+}
+
+#post-legend-btn {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+#post-legend-btn ::deep .nav-link {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    color: burlywood;
+}
+
+#post-legend-btn ::deep a.active {
+    text-decoration: underline;
+}
+
+#post-legend-btn ::deep .nav-link:hover {
     text-decoration: underline;
 }

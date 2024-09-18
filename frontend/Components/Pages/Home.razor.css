@@ -2,41 +2,44 @@
     display: flex;
     height: 100%;
     width: 100%;
-    justify-content: space-evenly;
     align-items: center;
+    justify-content: center;
 }
 
-#form{
+#container ::deep #map{
+    height: 100%;
+    width: 75%;
+}
+
+#sidebar{   
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    width: 25%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .5);
+    padding-left: .5%;
+    padding-top: .5%;
+}
+
+#searchbar{
+    display: flex;
     justify-content: space-evenly;
-    align-items: center;
-    height: 70vh;
-    width: 25vw;
-    div{
-        display: flex;
-        flex-direction: column;
-    }
-    label{
-        color: white;
-        font-size: calc(1rem + 0.5vh);
-    }
-    textarea{
-        width: 25vw;
-        background-color: antiquewhite;
-        border: 1px solid gray;
-    }
-    input{
-        width: 25vw;
-        background-color: antiquewhite;
-        border: 1px solid gray;
-        height: calc(20px + 2vh);
-    }
-    button{
-        height: calc(20px + 1vh);
-        width: 50%;
-        height: 14%;
-        background-color: burlywood;
-        border: 0;
-    }
+    height: fit-content;
+    width: 100%;
+    padding-right: 2%;
+}
+
+#search-btn{
+    background-color: burlywood;
+    border: 0;
+}
+
+#legends{
+    height: 93%;
+    overflow-y: auto;
+}
+
+.legend-item{
+    margin-bottom: 10px;
 }
