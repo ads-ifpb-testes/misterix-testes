@@ -5,15 +5,15 @@
 @page "/"
 
 <div id="container">
-    <Map CanSetMarkers="false" @ref="_map" />
+    <Map CanSetMarkers="false" Modal="_legendModal" @ref="_map" />
     <div id="sidebar">
         <div id="searchbar">
             <input type="text" name="search-input" @bind-value="searchInput">
-            <button id="search-btn" onclick="Search">Pesquisar</button>
+            <button id="search-btn" @onclick="Search">Pesquisar</button>
         </div>
         <div id="legends">
             <Virtualize Items="_legends" Context="legend">
-                <div class="legend-item">
+                <div class="legend-item" @onclick="() => SetLegendLocation(legend)">
                     <Card Color="CardColor.Dark">
                         <CardBody>
                             <CardTitle>@legend.Title</CardTitle>
@@ -27,8 +27,11 @@
     </div>
 </div>
 
+<LegendModal @ref="_legendModal" />
+
 @code {
     private Map _map = null!;
+    private LegendModal? _legendModal;
     private List<Legend> _legends = [];
     private string searchInput = string.Empty;
 
@@ -59,6 +62,11 @@
 
     private async Task Search()
     {
+        _legends = await _jS.InvokeAsync<List<Legend>>("searchLegend", searchInput);
+    }
 
+    private async Task SetLegendLocation(Legend legend)
+    {
+        await _jS.InvokeVoidAsync("setLocation", legend.Location.Coordinates);
     }
 }

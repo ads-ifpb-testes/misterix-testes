@@ -43,7 +43,9 @@
 
     private async Task PostLegend()
     {
-        _legend.Location = _map.MyMarkerPosition;
+        if (_map.MyMarkerPosition != null)
+            _legend.Location = _map.MyMarkerPosition;
+
         var isSuccess = await _jS.InvokeAsync<bool>("postLegend", _legend);
         if (isSuccess)
         {

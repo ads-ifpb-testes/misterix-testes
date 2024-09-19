@@ -40,9 +40,14 @@ window.getMarker = () => {
     return myMarker;
 }
 
-window.setMarker = (location, title) => {
-    const marker = L.marker(location, {icon: myIcon}).addTo(map);
-    marker.bindPopup(title);
+window.setMarker = (legend, modal) => {
+    console.log(modal);
+    const marker = L.marker(legend.location.coordinates, {icon: myIcon}).addTo(map);
+    if(modal){
+        marker.on('click', () => {
+            modal.invokeMethodAsync('OpenModal', legend)
+        });
+    }
 }
 
 window.invalidateSize = () => {

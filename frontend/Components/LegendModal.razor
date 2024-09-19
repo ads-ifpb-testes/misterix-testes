@@ -1,0 +1,30 @@
+@using frontend.Models
+@inherits ComponentBase
+
+<div id="modal">
+    <Modal @ref="_modal" Title="Lenda">
+        <BodyTemplate>
+            <div id="modal-container">
+                <h2>@Legend.Title</h2>
+                <h3>Autor</h3>
+                <p>@Legend.PostedBy</p>
+                <h3>Descrição</h3>
+                <p>@Legend.Description</p>
+                <h4>Tipo</h4>
+                <p>@Legend.Type</p>
+            </div>
+        </BodyTemplate>
+    </Modal>
+</div>
+
+@code {
+    public Modal? _modal;
+    public Legend Legend { get; set; } = new();
+
+    [JSInvokable]
+    public async Task OpenModal(Legend legend)
+    {
+        Legend = legend;
+        await _modal!.ShowAsync();
+    }
+}

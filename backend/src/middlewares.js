@@ -43,7 +43,7 @@ export function checkLoginModel(req, res, next){
 
 export function checkLegendModel(req, res, next){
     const {title, description, type, location} = req.body;
-    if(!title || !description || !type || !location)
+    if(!title || !description || !type || !location || location.type == '' || location.coordinates.length == 0)
         res.sendStatus(400);
     else{
         res.locals.legend = {title, description, type, location};

@@ -43,3 +43,7 @@
 .legend-item{
     margin-bottom: 10px;
 }
+
+.legend-item:hover{
+    cursor: pointer;
+}

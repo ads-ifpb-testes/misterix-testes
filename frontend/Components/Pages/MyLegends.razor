@@ -100,9 +100,12 @@ else
 
     private async Task SaveChanges()
     {
-        _selectedLegend!.Location = _map?.MyMarkerPosition;
-        await _jS.InvokeAsync<bool>("updateLegend", _selectedLegend, _selectedLegend.Id);
-        _navigator.Refresh(true);
+        if (_map!.MyMarkerPosition != null && _selectedLegend != null)
+        {
+            _selectedLegend.Location = _map.MyMarkerPosition;
+            await _jS.InvokeAsync<bool>("updateLegend", _selectedLegend, _selectedLegend.Id);
+            _navigator.Refresh(true);
+        }
     }
 
     private async Task Delete()

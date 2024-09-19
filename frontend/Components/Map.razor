@@ -15,6 +15,8 @@ else
 @code {
     [Parameter]
     public bool CanSetMarkers { get; set; } = true;
+    [Parameter]
+    public LegendModal? Modal { get; set; }
     private List<Legend>? _legends;
     public Geometry? MyMarkerPosition;
     private readonly JsonSerializerOptions _options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
@@ -68,7 +70,10 @@ else
 
         foreach (var legend in _legends)
         {
-            await _jS.InvokeVoidAsync("setMarker", legend.Location!.Coordinates, legend.Title);
+            if (Modal == null)
+                await _jS.InvokeVoidAsync("setMarker", legend, null);
+            else
+                await _jS.InvokeVoidAsync("setMarker", legend, DotNetObjectReference.Create<LegendModal>(Modal));
         }
     }
 
