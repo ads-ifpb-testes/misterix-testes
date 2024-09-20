@@ -30,12 +30,16 @@ else
         }
     }
 
+    protected override async Task OnParametersSetAsync()
+    {
+        await SetLegendsOnMap();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             _legends = await _jS.InvokeAsync<List<Legend>>("getLegends");
-            await SetLegendsOnMap();
         }
         catch
         {

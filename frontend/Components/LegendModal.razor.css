@@ -1,0 +1,18 @@
+::deep .dark-modal-body{
+    background-color: RGBA(var(--bs-dark-rgb),var(--bs-bg-opacity,1));
+    color: white;
+}
+
+#title{
+    font-size: large;
+    font-weight: 600;
+}
+
+#type{
+    color: gray;
+}
+
+#posted-by{
+    text-align: end;
+    color: lightgray;
+}

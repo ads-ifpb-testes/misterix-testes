@@ -4,6 +4,8 @@
 @rendermode InteractiveServer
 @page "/"
 
+<LegendModal @ref="_legendModal" />
+
 <div id="container">
     <Map CanSetMarkers="false" Modal="_legendModal" @ref="_map" />
     <div id="sidebar">
@@ -18,7 +20,6 @@
                         <CardBody>
                             <CardTitle>@legend.Title</CardTitle>
                             <CardSubTitle>@legend.Type</CardSubTitle>
-                            <CardText>@legend.Description</CardText>
                         </CardBody>
                     </Card>
                 </div>
@@ -26,8 +27,6 @@
         </div>
     </div>
 </div>
-
-<LegendModal @ref="_legendModal" />
 
 @code {
     private Map _map = null!;
@@ -44,20 +43,9 @@
                 _navigator.NavigateTo("login");
 
             await _map.SetCurrentLocation();
+            StateHasChanged();
         }
 
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        try
-        {
-            _legends = await _jS.InvokeAsync<List<Legend>>("getLegends");
-        }
-        catch
-        {
-            return;
-        }
     }
 
     private async Task Search()

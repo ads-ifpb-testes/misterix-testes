@@ -33,7 +33,7 @@ window.setCurrentLocation = () => {
 }
 
 window.setLocation = (coordinates) => {
-    map.setView(coordinates, 13);
+    map.setView(coordinates, 10);
 }
 
 window.getMarker = () => {

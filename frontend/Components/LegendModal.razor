@@ -2,16 +2,16 @@
 @inherits ComponentBase
 
 <div id="modal">
-    <Modal @ref="_modal" Title="Lenda">
+    <Modal @ref="_modal" ModalType="ModalType.Secondary" Size="ModalSize.Large" BodyCssClass="dark-modal-body">
+        <HeaderTemplate>
+            <span id="title">@Legend.Title</span>
+        </HeaderTemplate>
         <BodyTemplate>
-            <div id="modal-container">
-                <h2>@Legend.Title</h2>
-                <h3>Autor</h3>
-                <p>@Legend.PostedBy</p>
-                <h3>Descrição</h3>
-                <p>@Legend.Description</p>
-                <h4>Tipo</h4>
-                <p>@Legend.Type</p>
+            <p id="description">@Legend.Description</p>
+            <span id="type">@Legend.Type</span>
+            <div id="posted-by">
+                <label for="author">Publicado por:</label>
+                <span>@Legend.PostedBy</span>
             </div>
         </BodyTemplate>
     </Modal>
