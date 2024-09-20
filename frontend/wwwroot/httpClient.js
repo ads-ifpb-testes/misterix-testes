@@ -62,9 +62,10 @@ window.getMyLegends = async () => {
     }
 }
 
-window.updateLegend = async (legend, id) => {
+window.updateLegend = async (legend) => {
+    console.log(legend);
     const token = getCookie('token');
-    const res = await fetch(`${HOST}/legends/` + id, {
+    const res = await fetch(`${HOST}/legends/${legend._id}`, {
         method: 'PUT',
         body: JSON.stringify(legend),
         headers:{
@@ -72,12 +73,13 @@ window.updateLegend = async (legend, id) => {
             'Authorization': token
         }
     })
+    console.log(res);
     return res.status == 200;
 }
 
 window.deleteLegend = async (id) => {
     const token = getCookie('token');
-    const res = await fetch(`${HOST}http://localhost:3000/legends/` + id, {
+    const res = await fetch(`${HOST}/legends/${id}`, {
         method: 'DELETE',
         headers:{
             'Authorization': token

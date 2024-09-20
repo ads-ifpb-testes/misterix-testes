@@ -1,0 +1,73 @@
+@using frontend.Models
+@inherits ComponentBase
+@inject IJSRuntime _jS
+@inject NavigationManager _navigator
+
+<div id="modal">
+    <Modal @ref=" _modal" Title="Editar" ModalType="ModalType.Secondary" BodyCssClass="dark-modal-body"
+        FooterCssClass="dark-modal-footer" Fullscreen="ModalFullscreen.Always">
+        <BodyTemplate>
+            <div id="modal-container">
+                <Map @ref="_map" />
+                <div id="form">
+                    <div>
+                        <label for="title">Título:</label>
+                        <input id="title" type="text" @bind-value="_legend!.Title" />
+                    </div>
+                    <div>
+                        <label for="description">Descrição:</label>
+                        <textarea name="description" id="description" @bind="_legend!.Description"></textarea>
+                    </div>
+                    <div>
+                        <label for="type">Tipo:</label>
+                        <input id="type" type="text" @bind-value="_legend!.Type">
+                    </div>
+                </div>
+            </div>
+        </BodyTemplate>
+        <FooterTemplate>
+            <div id="footer">
+                <Button Color="ButtonColor.Danger" @onclick="Delete">Deletar</Button>
+                <div>
+                    <Button Color="ButtonColor.Primary" @onclick="SaveChanges">Salvar Alterações</Button>
+                    <Button Color="ButtonColor.Secondary" @onclick="HideModal">Fechar</Button>
+                </div>
+            </div>
+        </FooterTemplate>
+    </Modal>
+</div>
+
+@code {
+    private Map? _map;
+    private Modal? _modal;
+    private Legend? _legend;
+
+    private async Task SaveChanges()
+    {
+        if (_map!.MyMarkerPosition != null && _legend != null)
+        {
+            _legend.Location = _map.MyMarkerPosition;
+            await _jS.InvokeAsync<bool>("updateLegend", _legend);
+            _navigator.Refresh(true);
+        }
+    }
+
+    private async Task Delete()
+    {
+        await _jS.InvokeAsync<bool>("deleteLegend", _legend!.Id);
+        _navigator.Refresh(true);
+    }
+    public async Task OpenModal(Legend legend)
+    {
+        _legend = legend;
+        await _modal!.ShowAsync();
+        await Task.Delay(1000);
+        await _map!.InvalidateSize();
+        await _map!.SetLocation(_legend.Location!.Coordinates);
+    }
+
+    private async Task HideModal()
+    {
+        await _modal!.HideAsync();
+    }
+}

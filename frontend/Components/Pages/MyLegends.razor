@@ -4,11 +4,13 @@
 @inject NavigationManager _navigator
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
+<LegendEditorModal @ref="_editorModal" />
+
 @if (_legends.Count > 0)
 {
     <div id="legends">
         <Virtualize Items="_legends" Context="legend">
-            <div class="legend-item" @onclick="() => OpenModal(legend)">
+            <div class="legend-item" @onclick="() => _editorModal!.OpenModal(legend)">
                 <Card Color="CardColor.Dark">
                     <CardBody>
                         <CardTitle>@legend.Title</CardTitle>
@@ -22,44 +24,13 @@
 }
 else
 {
-    <span style="color: white;">Nenhuma lenda postada ainda.</span>
+    <span style="color: white;">Nenhuma lenda publicada ainda.</span>
 }
-
-<div id="modal">
-    <Modal @ref=" _modal" Title="Editar" Fullscreen="ModalFullscreen.Always">
-        <BodyTemplate>
-            <div id="modal-container">
-                <Map @ref="_map" />
-                <div id="form">
-                    <div>
-                        <label for="title">Título:</label>
-                        <input id="title" type="text" @bind-value="_selectedLegend!.Title" />
-                    </div>
-                    <div>
-                        <label for="description">Descrição:</label>
-                        <textarea name="description" id="description" @bind="_selectedLegend!.Description"></textarea>
-                    </div>
-                    <div>
-                        <label for="type">Tipo:</label>
-                        <input id="type" type="text" @bind-value="_selectedLegend!.Type">
-                    </div>
-                </div>
-            </div>
-        </BodyTemplate>
-        <FooterTemplate>
-            <Button Color="ButtonColor.Danger" @onclick="Delete">Deletar</Button>
-            <Button Color="ButtonColor.Secondary" @onclick="HideModal">Fechar</Button>
-            <Button Color="ButtonColor.Primary" @onclick="SaveChanges">Salvar Alterações</Button>
-        </FooterTemplate>
-    </Modal>
-</div>
 
 @code
 {
-    private List<Legend> _legends = new();
-    private Modal _modal = null!;
-    private Legend? _selectedLegend;
-    private Map? _map;
+    private List<Legend> _legends = [];
+    private LegendEditorModal? _editorModal;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -82,35 +53,5 @@ else
             Console.WriteLine(e.Message);
             return;
         }
-    }
-
-    private async Task OpenModal(Legend legend)
-    {
-        _selectedLegend = legend;
-        await _modal.ShowAsync();
-        await Task.Delay(1000);
-        await _map!.InvalidateSize();
-        await _map!.SetLocation(_selectedLegend.Location!.Coordinates);
-    }
-
-    private async Task HideModal()
-    {
-        await _modal.HideAsync();
-    }
-
-    private async Task SaveChanges()
-    {
-        if (_map!.MyMarkerPosition != null && _selectedLegend != null)
-        {
-            _selectedLegend.Location = _map.MyMarkerPosition;
-            await _jS.InvokeAsync<bool>("updateLegend", _selectedLegend, _selectedLegend.Id);
-            _navigator.Refresh(true);
-        }
-    }
-
-    private async Task Delete()
-    {
-        await _jS.InvokeAsync<bool>("deleteLegend", _selectedLegend!.Id);
-        _navigator.Refresh(true);
     }
 }

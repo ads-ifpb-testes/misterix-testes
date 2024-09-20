@@ -10,6 +10,17 @@
     color: white;
 }
 
+.dark-modal-body{
+    background-color: RGBA(var(--bs-dark-rgb),var(--bs-bg-opacity,1));
+    color: white;
+}
+
+.dark-modal-footer{
+    border-top-color: transparent !important;
+    background-color: RGBA(var(--bs-dark-rgb),var(--bs-bg-opacity,1)) !important;
+    color: white;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
