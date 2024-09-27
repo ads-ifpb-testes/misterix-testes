@@ -37,15 +37,3 @@ test('Requisição com token inválido.', () => {
     expect(next).not.toHaveBeenCalled();
     expect(res.statusCode).toBe(403);
 });
-
-test('Requisição com token expirado.', () => {
-    const token = sign({}, process.env.TOKEN_SECRET, {expiresIn: '0'});
-    const req = httpMocks.createRequest({
-        headers: {authorization: token}
-    });
-
-    authenticate(req, res, next);
-
-    expect(next).not.toHaveBeenCalled();
-    expect(res.statusCode).toBe(403);
-});

@@ -1,7 +1,7 @@
 import httpMocks from 'node-mocks-http';
-import { logIn } from '../../controller/userController.js';
-import User from '../../model/mongooseUser';
-import { generateAccessToken } from '../../service/jwtService';
+import { logIn } from '../../../controller/userController.js';
+import User from '../../../model/mongooseUser.js';
+import { generateAccessToken } from '../service/jwtService.jsice.js';
 jest.mock('../../service/jwtService.js', () => {
     return {
         generateAccessToken: jest.fn(() => '123')

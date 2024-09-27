@@ -1,4 +1,4 @@
-import {generateAccessToken} from '../../service/jwtService.js'
+import {generateAccessToken} from '../../../service/jwtService.js'
 import { verify } from 'jsonwebtoken';
 import 'dotenv/config'
 

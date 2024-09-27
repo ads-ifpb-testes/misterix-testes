@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { checkLoginModel } from '../../middlewares';
+import { checkLoginModel } from '../../../middlewares';
 
 const res = httpMocks.createResponse();
 const next = jest.fn();
