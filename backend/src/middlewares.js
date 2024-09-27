@@ -6,8 +6,10 @@ export async function checkLegendOwner(req, res, next){
     const {login} = res.locals;
     try{
         const legend = await Legend.findById(id);
-        if(legend.postedBy != login)
+        if(legend.postedBy != login){
             res.sendStatus(401);
+            return;
+        }
 
         next();
     }catch(err){
@@ -23,7 +25,6 @@ export function authenticate(req, res, next){
 
     jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
         if (err){
-            console.log(err);
             return res.sendStatus(403);
         }
         res.locals.login = user.data;
@@ -33,7 +34,7 @@ export function authenticate(req, res, next){
 
 export function checkLoginModel(req, res, next){
     const {login, password} = req.body;
-    if(!login || !password)
+    if(!login || !password || password.length < 6)
         res.sendStatus(400);
     else{
         res.locals.user = {login, password};
@@ -43,7 +44,7 @@ export function checkLoginModel(req, res, next){
 
 export function checkLegendModel(req, res, next){
     const {title, description, type, location} = req.body;
-    if(!title || !description || !type || !location || location.type == '' || location.coordinates.length == 0)
+    if(!title || !description || !type || !location || !location.type || location.type != 'Point' || !location.coordinates || location.coordinates.length < 2 || location.coordinates.length > 2)
         res.sendStatus(400);
     else{
         res.locals.legend = {title, description, type, location};
