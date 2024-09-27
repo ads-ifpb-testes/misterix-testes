@@ -1,1 +1,3 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/H6N0bb9E)
+1- Rode o comando git clone https://github.com/ads-ifpb-testes/misterix-testes.git;
+2- Abra a pasta backend (cd backend);
+3- Rode o comando npm run test.
