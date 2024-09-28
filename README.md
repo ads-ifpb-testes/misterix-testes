@@ -3,3 +3,6 @@
 2. Entre na pasta backend do projeto;
 3. Execute o comando npm i
 4. Execute o comando npm run test
+
+# Diretório dos testes unitários e de integração:
+./backend/src/__tests__
