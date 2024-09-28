@@ -11,19 +11,10 @@ services:
       - 3000:3000
     depends_on:
       - redis
-      # postgis:
-      #   condition: service_healthy
+      - mongo
   redis:
     image: redis/redis-stack-server
     ports:
       - 6379:6379
-
-  # postgis:
-  #   image: postgis/postgis
-  #   env_file:
-  #     - ./backend/.env
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "pg_isready"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+  mongo:
+    image: mongo
