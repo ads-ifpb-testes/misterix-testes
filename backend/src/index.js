@@ -24,4 +24,6 @@ app.use('/users', userRouter)
 
 app.get('/auth', authenticate, (req, res) => res.sendStatus(200));
 
+export default app;
+
 app.listen(port, () => console.log('listen on http://localhost:' + port));

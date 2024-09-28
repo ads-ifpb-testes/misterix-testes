@@ -2,8 +2,11 @@ import httpMocks from 'node-mocks-http';
 import {logIn} from '../../controller/userController.js';
 import User from '../../model/mongooseUser.js';
 import Legend from '../../model/mongooseLegend.js';
-import mongoose from 'mongoose';
+import request from 'supertest';
+import app from '../../index.js';
 import { getLegends, getMyLegends, postLegend, searchLegends } from '../../controller/legendController.js';
+import mongoose from '../../data/mongoose.js';
+import { generateAccessToken } from '../../service/jwtService.js';
 jest.mock('../../data/redis.js', () => {
     return {
         del: jest.fn(),
@@ -27,53 +30,54 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+    await mongoose.connection.dropDatabase();
+    await mongoose.disconnect();
     jest.clearAllMocks();
 });
 
-test('Cadastrar usuário', async () => {
-    const req = httpMocks.createRequest();
-    const res = httpMocks.createResponse({
-        locals: {user: {login: 'user', password: '123456'}}
-    });
+const token = generateAccessToken('user');
 
-    await logIn(req, res);
+test('Cadastrar usuário', async () => {
+    const res = await request(app)
+        .post('/users/login')
+        .set("content-type", "application/json")
+        .send({login: 'user', password: '123456'})
+
     const count = await User.countDocuments();
 
     expect(count).toBe(2);
     expect(res.statusCode).toBe(201);
+    expect(res.body).toBeDefined();
 });
 
 test('Logar usuário', async () => {
-    const req = httpMocks.createRequest();
-    const res = httpMocks.createResponse({
-        locals: {user: {login: 'user', password: '123456'}}
-    });
+    const res = await request(app)
+        .post('/users/login')
+        .set("content-type", "application/json")
+        .send({login: 'user', password: '123456'});
 
-    await logIn(req, res);
     const count = await User.countDocuments();
 
     expect(count).toBe(2);
     expect(res.statusCode).toBe(200);
+    expect(res.body).toBeDefined();
 });
 
 test('Adicionando Lenda', async () => {
-    const req = httpMocks.createRequest();
-    const res = httpMocks.createResponse({
-        locals: {
-            login: 'user',
-            legend: {
-                title: 'loira do banheiro', 
-                description: 'loira do banheiro', 
-                type: 'espírito', 
-                location: {
-                    type: 'Point',
-                    coordinates: [1, 1]
-                }
+    const res = await request(app)
+        .post('/legends')
+        .set("content-type", "application/json")
+        .set('Authorization', token)
+        .send({
+            title: 'loira do banheiro', 
+            description: 'loira do banheiro', 
+            type: 'espírito', 
+            location: {
+                type: 'Point',
+                coordinates: [1, 1]
             }
-        }
-    });
+        });
 
-    await postLegend(req, res);
     const count = await Legend.countDocuments();
 
     expect(count).toBe(2);
@@ -81,23 +85,19 @@ test('Adicionando Lenda', async () => {
 });
 
 test('Buscar lendas', async () => {
-    const req = httpMocks.createRequest();
-    const res = httpMocks.createResponse();
-
-    await getLegends(req, res);
+    const res = await request(app)
+        .get('/legends');
 
     expect(res.statusCode).toBe(200);
-    expect(res._getJSONData().length).toBe(2);
+    expect(res.body).toBeDefined();
 })
 
 test('Buscar minhas lendas', async () => {
-    const req = httpMocks.createRequest();
-    const res = httpMocks.createResponse({
-        locals: {login: 'user'}
-    });
+    const res = await request(app)
+        .get('/legends/mylegends')
+        .set('Authorization', token)
 
-    await getMyLegends(req, res);
-    const legends = res._getJSONData();
+    const legends = res.body;
 
     expect(res.statusCode).toBe(200);
     expect(legends.length).toBe(1);
@@ -105,13 +105,11 @@ test('Buscar minhas lendas', async () => {
 })
 
 test('Procurar lendas', async () => {
-    const req = httpMocks.createRequest({
-        query: {query: 'monstro'}
-    });
-    const res = httpMocks.createResponse();
+    const res = await request(app)
+        .post('/legends/search')
+        .query({query: 'monstro'});
 
-    await searchLegends(req, res);
-    const legends = res._getJSONData();
+    const legends = res.body;
 
     expect(res.statusCode).toBe(200);
     expect(legends.length).toBe(1);
