@@ -6,17 +6,17 @@
 
 <div id="container">
     <h1 class="misterix">Misterix</h1>
-    <div id="properties">
+    <div data-testid="form" id="login-form">
         <h1>Log in/Sign up</h1>
         <div class="property">
             <label for="login">Login:</label>
-            <input type="text" name="login" id="login" @bind-value="_login">
+            <input data-testid="login" type="text" name="login" id="login" @bind-value="_login">
         </div>
         <div class="property">
             <label for="password">Senha:</label>
-            <input type="password" name="password" id="password" @bind-value="_password">
+            <input data-testid="password" type="password" name="password" id="password" @bind-value="_password">
         </div>
-        <button id="submit-btn" @onclick="TryLogin">Confirmar</button>
+        <button data-testid="submit-btn" id="submit-btn" @onclick="TryLogin">Confirmar</button>
     </div>
 </div>
 

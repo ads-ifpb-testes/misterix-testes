@@ -8,7 +8,7 @@
     background: linear-gradient(90deg, rgba(0,42,43,1) 0%, rgba(55,52,31,1) 50%, rgba(0,42,43,1) 100%);
 }
 
-#properties{
+#login-form{
     display: flex;
     flex-direction: column;
     height: calc(200px + 25vh);
