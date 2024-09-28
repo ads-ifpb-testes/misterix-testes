@@ -120,6 +120,7 @@ test.describe('Testando funcionalidades', () => {
         const responsePromise = page.waitForResponse(backendHost+'/legends/mylegends');
         await page.getByRole('button', {name: 'Deletar'}).click();
         await responsePromise;
+        await page.waitForTimeout(1000);
         expect(await page.locator('div.legend-item').count()).toEqual(count - 1);
     })
 });
