@@ -69,6 +69,10 @@ export async function updateLegend(req, res){
     const {id} = req.params;
     const legend = res.locals.legend;
     try{
+        const legendExist = await Legend.findById(id);
+        if(!legendExist)
+            return res.sendStatus(404);
+
         await Legend.findByIdAndUpdate(id, legend);
         await redisClient.del('LEGENDS');
         res.sendStatus(200);
@@ -81,6 +85,10 @@ export async function updateLegend(req, res){
 export async function deleteLegend(req, res){
     const {id} = req.params;
     try{
+        const legendExist = await Legend.findById(id);
+        if(!legendExist)
+            return res.sendStatus(404);
+
         await Legend.findByIdAndDelete(id);
         await redisClient.del('LEGENDS');
         res.sendStatus(200);    
