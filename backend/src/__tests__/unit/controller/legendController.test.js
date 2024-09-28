@@ -38,9 +38,8 @@ beforeEach(() => {
         }
     });
     
-    
     redisGetMock.mockImplementation(() => cache);
-    redisSetMock.mockImplementation((cl, json) => jest.fn());
+    redisSetMock.mockImplementation(jest.fn());
     redisDelMock.mockImplementation(jest.fn());
 
     legendFindMock.mockImplementation(() => db);
