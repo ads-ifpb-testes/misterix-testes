@@ -1,0 +1,1 @@
+process.env.MONGODB_URI = globalThis.__MONGO_URI__ + globalThis.__MONGO_DB_NAME__;

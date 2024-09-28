@@ -1,26 +1,18 @@
 import httpMocks from 'node-mocks-http';
 import {logIn} from '../../controller/userController.js';
-import mongoose from '../../data/mongoose.js';
 import User from '../../model/mongooseUser.js';
 import Legend from '../../model/mongooseLegend.js';
-import redisClient from '../../data/redis.js';
+import mongoose from 'mongoose';
 import { getLegends, getMyLegends, postLegend, searchLegends } from '../../controller/legendController.js';
-jest.mock('../../data/redis.js');
-
-const redisGetMock = jest.spyOn(redisClient, 'get');
-const redisSetMock = jest.spyOn(redisClient, 'set');
-const redisDelMock = jest.spyOn(redisClient, 'del');
+jest.mock('../../data/redis.js', () => {
+    return {
+        del: jest.fn(),
+        set: jest.fn(),
+        get: () => undefined,
+    }
+});
 
 beforeAll(async () => {
-    await mongoose.disconnect();
-    await mongoose.connect(globalThis.__MONGO_URI__ + globalThis.__MONGO_DB_NAME__);
-    await User.deleteMany({});
-    await Legend.deleteMany({});
-
-    redisGetMock.mockImplementation(() => undefined);
-    redisSetMock.mockImplementation(jest.fn());
-    redisDelMock.mockImplementation(jest.fn());
-
     await User.create({login: 'user1', password: '123456'});
     await Legend.create({
         title: 'bicho papão', 
@@ -35,10 +27,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await User.deleteMany({});
-    await Legend.deleteMany({});
-    await mongoose.disconnect();
-
     jest.clearAllMocks();
 });
 
