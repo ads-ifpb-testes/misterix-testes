@@ -3,7 +3,7 @@ import 'dotenv/config';
 
 main().catch(err => console.log(err));
 
-export async function main() {
+async function main() {
   await mongoose.connect(process.env.MONGODB_URI);
 }
 
