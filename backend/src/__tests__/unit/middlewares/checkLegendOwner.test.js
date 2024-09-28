@@ -1,6 +1,6 @@
 import httpMocks from 'node-mocks-http';
-import Legend from '../../model/mongooseLegend';
-import { checkLegendOwner } from '../../middlewares';
+import Legend from '../../../model/mongooseLegend.js';
+import { checkLegendOwner } from '../../../middlewares.js';
 
 const findByIdMock = jest.spyOn(Legend, 'findById');
 findByIdMock.mockImplementation(() => {

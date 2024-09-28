@@ -1,8 +1,8 @@
 import httpMocks from 'node-mocks-http';
 import { logIn } from '../../../controller/userController.js';
 import User from '../../../model/mongooseUser.js';
-import { generateAccessToken } from '../service/jwtService.jsice.js';
-jest.mock('../../service/jwtService.js', () => {
+import { generateAccessToken } from '../../../service/jwtService.js';
+jest.mock('../../../service/jwtService.js', () => {
     return {
         generateAccessToken: jest.fn(() => '123')
     }
@@ -17,6 +17,10 @@ beforeEach(() => {
     userFindOneMock.mockImplementation(jest.fn());
     userCreateMock.mockImplementation(jest.fn());
 });
+
+afterAll(() => {
+    jest.clearAllMocks();
+})
 
 test('Cadastrar usuário', async () => {
     const res = httpMocks.createResponse({

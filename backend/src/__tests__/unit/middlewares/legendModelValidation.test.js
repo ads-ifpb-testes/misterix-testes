@@ -1,5 +1,5 @@
 import httpMocks from 'node-mocks-http';
-import { checkLegendModel } from '../../middlewares';
+import { checkLegendModel } from '../../../middlewares.js';
 
 const res = httpMocks.createResponse();
 const next = jest.fn();

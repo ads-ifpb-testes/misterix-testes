@@ -1,9 +1,9 @@
-import {deleteLegend, getLegends, getMyLegends, postLegend, testF, updateLegend} from '../../controller/legendController.js';
+import {deleteLegend, getLegends, getMyLegends, postLegend, updateLegend} from '../../../controller/legendController.js';
 import httpMocks from 'node-mocks-http';
-import redisClient from '../../data/redis.js';
-import Legend from '../../model/mongooseLegend.js';
-jest.mock('../../data/redis.js');
-jest.mock('../../model/mongooseLegend.js');
+import redisClient from '../../../data/redis.js';
+import Legend from '../../../model/mongooseLegend.js';
+jest.mock('../../../data/redis.js');
+jest.mock('../../../model/mongooseLegend.js');
 
 const redisGetMock = jest.spyOn(redisClient, 'get');
 const redisSetMock = jest.spyOn(redisClient, 'set');
@@ -48,6 +48,10 @@ beforeEach(() => {
     legendFindByIdMock.mockImplementation((id) => {return {}});
     legendFindByIdAndUpdateMock.mockImplementation((id, legend) => {});
     legendFindByIdAndDeleteMock.mockImplementation((id) => {});
+});
+
+afterAll(() => {
+    jest.clearAllMocks();
 })
 
 test('Buscar lendas no banco', async () => {
