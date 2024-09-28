@@ -1,4 +1,4 @@
-import {authenticate} from '../../middlewares.js';
+import {authenticate} from '../../../middlewares.js';
 import httpMocks from 'node-mocks-http';
 import { sign } from 'jsonwebtoken';
 
